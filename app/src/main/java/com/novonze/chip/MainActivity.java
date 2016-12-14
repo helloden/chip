@@ -29,9 +29,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            double originalValue = Double.parseDouble(s.toString());
-            recalculate(originalValue);
+            if(s.length() > 0) {
+                double originalValue = Double.parseDouble(s.toString());
+                recalculate(originalValue);
+            }
         }
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
