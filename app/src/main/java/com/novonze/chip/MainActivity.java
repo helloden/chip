@@ -1,6 +1,5 @@
 package com.novonze.chip;
 
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,15 +12,19 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    String fromCurrency = "CAD";
+
+    String toCurrency = "USD";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EditText canadaTextbox = (EditText) findViewById(R.id.canadaTextbox);
-        canadaTextbox.addTextChangedListener(filterTextWatcher);
+        EditText textbox = (EditText) findViewById(R.id.textbox);
+        textbox.addTextChangedListener(filterTextWatcher);
 
-        TextView result = (TextView) findViewById(R.id.result1);
+        TextView result = (TextView) findViewById(R.id.result);
         setCurrencyLabel(((RadioGroup) findViewById(R.id.radioGroup)).getCheckedRadioButtonId());
     }
 
@@ -29,9 +32,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            double originalValue = Double.parseDouble(s.toString());
-            recalculate(originalValue);
+            if(s.length() > 0) {
+                recalculate(s.toString());
+            }
+            else {
+                TextView result = (TextView) findViewById(R.id.result);
+                result.clearComposingText();
+            }
         }
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -43,34 +52,39 @@ public class MainActivity extends AppCompatActivity {
 
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
-        if(checked) {
-            setCurrencyLabel(view.getId());
-        }
+        setCurrencyLabel(view.getId());
 
-        EditText canadaTextbox = (EditText) findViewById(R.id.canadaTextbox);
-        recalculate(Double.parseDouble(canadaTextbox.getText().toString()));
+        EditText textbox = (EditText) findViewById(R.id.textbox);
+        recalculate(textbox.getText().toString());
     }
-    private void recalculate(double originalValue) {
-        TextView result = (TextView) findViewById(R.id.result1);
-        double finalValue = convert(originalValue);
-        result.setText(String.format("%.2f", finalValue));
+    private void recalculate(String value) {
+        if(value.length() > 0 ) {
+            TextView result = (TextView) findViewById(R.id.result);
+            double finalValue = convert(Double.parseDouble(value));
+            result.setText(String.format("%.2f", finalValue));
+        }
     }
 
     private void setCurrencyLabel(int checkedOption)
     {
-        TextView currencyLabel = (TextView) findViewById(R.id.currencyLabel);
-        String currency = "";
+        TextView toCurrencyLabel = (TextView) findViewById(R.id.toCurrencyLabel);
+        TextView fromCurrencyLabel = (TextView) findViewById(R.id.fromCurrencyLabel);
+
         switch (checkedOption) {
             case (R.id.toCADRadioButton):
-                currency = "CAD";
+                toCurrency = "CAD";
+                fromCurrency = "USD";
                 break;
             case (R.id.toUSDRadioButton):
-                currency = "USD";
+                toCurrency = "USD";
+                fromCurrency = "CAD";
                 break;
             default:
                 return;
         }
-        currencyLabel.setText(currency);
+
+        toCurrencyLabel.setText(toCurrency);
+        fromCurrencyLabel.setText(fromCurrency);
     }
 
     private double convert(double originalValue) {
