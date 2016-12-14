@@ -46,7 +46,7 @@
         android:text="0"
         android:maxLines="1"
         android:textColor="@android:color/white"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
         tools:fontFamily="sans-serif" />
 
@@ -54,7 +54,7 @@
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:checkedButton="@+id/toCADRadioButton"
         android:layout_below="@+id/textbox"
         android:layout_centerHorizontal="true"
@@ -116,5 +116,27 @@
         android:layout_toEndOf="@+id/radioGroup"
         android:id="@+id/fromCurrencyLabel"
         android:textColor="@color/colorTextColourLight" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView14"
+        android:textColor="@android:color/white"
+        android:text="--"
+        android:layout_alignBaseline="@+id/exchangeRateLabel"
+        android:layout_alignBottom="@+id/exchangeRateLabel"
+        android:layout_toRightOf="@+id/exchangeRateLabel"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:text="Exchange Rate:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/exchangeRateLabel"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/radioGroup"
+        android:layout_alignStart="@+id/radioGroup"
+        android:layout_marginStart="5dp" />
 
 </RelativeLayout>

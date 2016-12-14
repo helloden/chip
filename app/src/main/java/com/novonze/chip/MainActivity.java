@@ -16,6 +16,10 @@ public class MainActivity extends AppCompatActivity {
 
     String toCurrency = "USD";
 
+    double baseExchangeRate = 0.74;
+
+    double exchangeRate = 0.74;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,15 +73,19 @@ public class MainActivity extends AppCompatActivity {
     {
         TextView toCurrencyLabel = (TextView) findViewById(R.id.toCurrencyLabel);
         TextView fromCurrencyLabel = (TextView) findViewById(R.id.fromCurrencyLabel);
+        TextView exchangeRateLabel = (TextView) findViewById(R.id.textView14);
+        exchangeRate = baseExchangeRate;
 
         switch (checkedOption) {
             case (R.id.toCADRadioButton):
                 toCurrency = "CAD";
                 fromCurrency = "USD";
+                exchangeRate = baseExchangeRate;
                 break;
             case (R.id.toUSDRadioButton):
                 toCurrency = "USD";
                 fromCurrency = "CAD";
+                exchangeRate = 1/baseExchangeRate;
                 break;
             default:
                 return;
@@ -85,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         toCurrencyLabel.setText(toCurrency);
         fromCurrencyLabel.setText(fromCurrency);
+        exchangeRateLabel.setText(String.format("%.2f", exchangeRate));
     }
 
     private double convert(double originalValue) {
@@ -99,16 +108,11 @@ public class MainActivity extends AppCompatActivity {
             taxRate = 1.095;
         }
 
-        return convertToCurrency(originalValue) * taxRate;
+        return convertToCurrency(originalValue * taxRate);
     }
 
     private double convertToCurrency(double originalValue) {
-        if(isFinalUSDValue()) {
-            return originalValue / 0.74;
-        }
-        else {
-            return originalValue * 0.74;
-        }
+        return originalValue / exchangeRate;
     }
 
     private boolean isFinalUSDValue()
