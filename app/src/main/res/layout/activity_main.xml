@@ -13,130 +13,238 @@
     tools:context="com.novonze.chip.MainActivity"
     android:background="@color/colorBackground">
 
-    <EditText
-        android:id="@+id/textbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:inputType="numberDecimal"
-        android:ems="10"
-        android:maxLines="1"
-        android:textSize="30sp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/toCurrencyLabel"
-        android:background="#32FFFFFF"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/white"
-        android:textAlignment="center" />
-
-    <TextView
-        android:id="@+id/toCurrencyLabel"
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/result"
-        android:textColor="@android:color/white" />
-
     <TextView
         android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="90dp"
         android:text="0"
+        android:textSize="100sp"
         android:maxLines="1"
         android:textColor="@android:color/white"
-        android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true"
-        tools:fontFamily="sans-serif" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:checkedButton="@+id/toCADRadioButton"
-        android:layout_below="@+id/textbox"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/toCADRadioButton"
-            android:text="USD to CAD"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/colorTextColourLight"
-            android:backgroundTint="@color/colorTextColourLight"
-            android:textColorLink="@android:color/holo_blue_light"
-            android:focusable="false"
-            android:buttonTint="@color/colorTextColourLight"
-            android:onClick="onRadioButtonClicked"
-            android:checked="true" />
-
-        <RadioButton
-            android:id="@+id/toUSDRadioButton"
-            android:text="CAD to USD"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColorLink="@android:color/background_light"
-            android:layout_weight="1"
-            android:textColor="@color/colorTextColourLight"
-            android:buttonTint="@color/colorTextColourLight"
-            android:checked="false"
-            android:onClick="onRadioButtonClicked" />
-
-    </RadioGroup>
-
-    <TextView
-        android:text="$"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/result"
-        android:layout_alignBaseline="@id/result"
-        android:id="@+id/dollarLabel1"
-        android:textColor="@color/colorTextColourLight" />
-
-    <TextView
-        android:text="$"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/dollarLabel2"
-        android:textColor="@color/colorTextColourLight"
-        android:layout_alignTop="@+id/textbox"
-        android:layout_alignStart="@+id/textbox"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="19dp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/dollarLabel2"
-        android:layout_toEndOf="@+id/radioGroup"
-        android:id="@+id/fromCurrencyLabel"
-        android:textColor="@color/colorTextColourLight" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView14"
-        android:textColor="@android:color/white"
-        android:text="--"
-        android:layout_alignBaseline="@+id/exchangeRateLabel"
-        android:layout_alignBottom="@+id/exchangeRateLabel"
-        android:layout_toRightOf="@+id/exchangeRateLabel"
-        android:layout_marginStart="5dp"/>
-
-    <TextView
-        android:text="Exchange Rate:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:id="@+id/exchangeRateLabel"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-thin" />
+    <TextView
+        android:id="@+id/resultDollarSign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="$"
+        android:maxLines="1"
+        android:layout_toLeftOf="@id/result"
+        android:layout_alignBaseline="@id/result"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/resultCurrencyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="@string/currency_USD"
+        android:maxLines="1"
+        android:layout_below="@id/result"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorLightishWhite" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/swapButton"
+        android:layout_below="@id/resultCurrencyLabel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/swap_button_selector"
         android:textColor="@android:color/white"
-        android:layout_below="@+id/radioGroup"
-        android:layout_alignStart="@+id/radioGroup"
-        android:layout_marginStart="5dp" />
+        android:onClick="onClickSwapButton"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/calculatorButtons">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="7"
+                android:id="@+id/button7"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="8"
+                android:id="@+id/button8"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="9"
+                android:id="@+id/button9"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="DEL"
+                android:id="@+id/buttonDel"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="4"
+                android:id="@+id/button4"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="5"
+                android:id="@+id/button5"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="6"
+                android:id="@+id/button6"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0"
+                android:id="@+id/button0"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1"
+                android:id="@+id/button1"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="2"
+                android:id="@+id/button2"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="3"
+                android:id="@+id/button3"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+
+            <com.novonze.chip.SquareButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="."
+                android:id="@+id/buttonDot"
+                android:textStyle="bold"
+                android:background="@drawable/square_button_selector"
+                android:textColor="@android:color/white"
+                android:onClick="onClickCalculatorButton" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_toLeftOf="@+id/inputCurrencyLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/checkBox"
+        android:id="@+id/inputRow">
+        <TextView
+            android:id="@+id/inputDollarSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginBottom="5dp"
+            android:text="$"
+            android:maxLines="1"
+            android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/inputText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/inputDollarSign"
+            android:textSize="50sp"
+            android:text="0"
+            android:layout_marginLeft="5dp"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-thin" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/inputCurrencyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textAlignment="textEnd"
+        android:layout_alignEnd="@id/calculatorButtons"
+        android:layout_margin="5dp"
+        android:layout_above="@id/checkBox"
+        android:text="@string/currency_CAD"
+        android:maxLines="1"
+        android:textColor="@color/colorLightestWhite" />
+
+    <CheckBox
+        android:text="Include tax calculation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/calculatorButtons"
+        android:layout_alignParentStart="true"
+        android:id="@+id/checkBox"
+        android:textColor="@color/colorLightishWhite"
+        android:buttonTint="@color/colorAccent" />
 
 </RelativeLayout>

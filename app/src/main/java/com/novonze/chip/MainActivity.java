@@ -1,131 +1,150 @@
 package com.novonze.chip;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.DecimalFormat;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    String fromCurrency = "CAD";
+    SquareButton    button1, button2, button3,
+                    button4, button5, button6,
+                    button7, button8, button9,
+                    button0, buttonDot, buttonDel;
 
-    String toCurrency = "USD";
+    TextView inputText, resultText, inputCurrencyLabel, resultCurrencyLabel;
 
-    double baseExchangeRate = 0.74;
+    DecimalFormat decimalFormat;
 
-    double exchangeRate = 0.74;
+    CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        inputText = (TextView) findViewById(R.id.inputText);
+        resultText = (TextView) findViewById(R.id.result);
 
-        EditText textbox = (EditText) findViewById(R.id.textbox);
-        textbox.addTextChangedListener(filterTextWatcher);
+        decimalFormat = new DecimalFormat();
+        decimalFormat.setMaximumFractionDigits(2);
+        decimalFormat.setMinimumFractionDigits(0);
+        decimalFormat.setGroupingUsed(false);
 
-        TextView result = (TextView) findViewById(R.id.result);
-        setCurrencyLabel(((RadioGroup) findViewById(R.id.radioGroup)).getCheckedRadioButtonId());
+        checkBox = (CheckBox) findViewById(R.id.checkBox);
+        checkBox.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                        recalculateFinalValue();
+                    }
+                }
+        );
+
+        inputCurrencyLabel = (TextView) findViewById(R.id.inputCurrencyLabel);
+        resultCurrencyLabel = (TextView) findViewById(R.id.resultCurrencyLabel);
     }
 
-    private TextWatcher filterTextWatcher = new TextWatcher() {
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if(s.length() > 0) {
-                recalculate(s.toString());
-            }
-            else {
-                TextView result = (TextView) findViewById(R.id.result);
-                result.clearComposingText();
-            }
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
-
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
-        setCurrencyLabel(view.getId());
-
-        EditText textbox = (EditText) findViewById(R.id.textbox);
-        recalculate(textbox.getText().toString());
-    }
-    private void recalculate(String value) {
-        if(value.length() > 0 ) {
-            TextView result = (TextView) findViewById(R.id.result);
-            double finalValue = convert(Double.parseDouble(value));
-            result.setText(String.format("%.2f", finalValue));
-        }
-    }
-
-    private void setCurrencyLabel(int checkedOption)
+    public void onClickCalculatorButton(View v)
     {
-        TextView toCurrencyLabel = (TextView) findViewById(R.id.toCurrencyLabel);
-        TextView fromCurrencyLabel = (TextView) findViewById(R.id.fromCurrencyLabel);
-        TextView exchangeRateLabel = (TextView) findViewById(R.id.textView14);
-        exchangeRate = baseExchangeRate;
-
-        switch (checkedOption) {
-            case (R.id.toCADRadioButton):
-                toCurrency = "CAD";
-                fromCurrency = "USD";
-                exchangeRate = baseExchangeRate;
+        String currentText = inputText.getText().toString();
+        Button b = (SquareButton)v;
+        switch(v.getId()){
+            case R.id.buttonDel:
+                handleBackspace(currentText);
                 break;
-            case (R.id.toUSDRadioButton):
-                toCurrency = "USD";
-                fromCurrency = "CAD";
-                exchangeRate = 1/baseExchangeRate;
+            case R.id.buttonDot:
+                handleDot(currentText);
                 break;
             default:
-                return;
+                updateInputValue(b.getText().toString());
+                break;
         }
 
-        toCurrencyLabel.setText(toCurrency);
-        fromCurrencyLabel.setText(fromCurrency);
-        exchangeRateLabel.setText(String.format("%.2f", exchangeRate));
+        recalculateFinalValue();
     }
 
-    private double convert(double originalValue) {
-        double result = originalValue;
-        boolean isFinalUsdValue = isFinalUSDValue();
-        double taxRate = 1;
+    public void onClickSwapButton(View v)
+    {
+        CharSequence oldInputCurrency = inputCurrencyLabel.getText();
+        inputCurrencyLabel.setText(resultCurrencyLabel.getText());
+        resultCurrencyLabel.setText(oldInputCurrency);
+        recalculateFinalValue();
+    }
 
-        if(isFinalUsdValue) {
-            taxRate = 1.12;
+    private void handleDot(String currentText) {
+        if(!currentText.contains(".")){
+            inputText.setText(inputText.getText() + ".");
         }
         else {
-            taxRate = 1.095;
+            Context context = getApplicationContext();
+            CharSequence text = "Only one decimal point duh dummy.";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
-
-        return convertToCurrency(originalValue * taxRate);
     }
 
-    private double convertToCurrency(double originalValue) {
-        return originalValue / exchangeRate;
+    private void handleBackspace(String currentText) {
+        if(currentText.length() == 1) {
+            inputText.setText("0");
+        }
+        else {
+            inputText.setText(currentText.substring(0, currentText.length() - 1));
+        }
     }
 
-    private boolean isFinalUSDValue()
+    private void updateInputValue(String value) {
+        String currentText = inputText.getText().toString();
+        if(currentText.equals("0")){
+            inputText.setText(value);
+        }
+        else{
+            inputText.setText(inputText.getText() + value);
+        }
+    }
+
+    private void recalculateFinalValue()
     {
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        double currentInputDouble = Double.parseDouble(inputText.getText().toString());
+        String originatingCurrency = inputCurrencyLabel.getText().toString();
+        double finalValue = currentInputDouble * getCurrencyExchangeRate(originatingCurrency);
 
-        switch (radioGroup.getCheckedRadioButtonId()) {
-            case (R.id.toCADRadioButton):
-                return false;
-            case (R.id.toUSDRadioButton):
-                return true;
+        if(checkBox.isChecked())
+        {
+            finalValue *= getOriginatingTaxRate(originatingCurrency);
         }
 
-        return false;
+        resultText.setText(decimalFormat.format(finalValue));
+    }
+
+    private double getCurrencyExchangeRate(String originating)
+    {
+        switch(originating) {
+            case "USD":
+                return 1/0.74;
+            case "CAD":
+                return 0.74;
+            default:
+                return 1;
+        }
+    }
+
+    private double getOriginatingTaxRate(String originating) {
+        switch (originating) {
+            case "USD":
+                return 1.095;
+            case "CAD":
+                return 1.12;
+            default:
+                return 1;
+        }
     }
 }
