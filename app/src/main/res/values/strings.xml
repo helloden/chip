@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">chip</string>
+    <string name="app_name">Chip</string>
     <string name="currency_USD">USD</string>
     <string name="currency_CAD">CAD</string>
 </resources>
